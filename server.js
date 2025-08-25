@@ -7,7 +7,10 @@ import authRoutes from "./routes/auth.js";
 dotenv.config();
 const app = express();
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+  origin: "https://68ac3b80e9665cac632ffaad--magnificent-sherbet-8b5e97.netlify.app",
+  credentials: true
+}));
 
 app.use("/api/auth", authRoutes);
 
