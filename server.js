@@ -8,7 +8,7 @@ dotenv.config();
 const app = express();
 app.use(express.json());
 app.use(cors({
-  origin: "https://68ac3b80e9665cac632ffaad--magnificent-sherbet-8b5e97.netlify.app",
+  origin: "https://magnificent-sherbet-8b5e97.netlify.app/",
   credentials: true
 }));
 
