@@ -3,16 +3,20 @@ import mongoose from "mongoose";
 import cors from "cors";
 import dotenv from "dotenv";
 import authRoutes from "./routes/auth.js";
+import bookingRoutes from "./routes/bookingRoutes.js"
 
 dotenv.config();
 const app = express();
 app.use(express.json());
 app.use(cors({
-  origin: "https://magnificent-sherbet-8b5e97.netlify.app",
+  origin: ["https://magnificent-sherbet-8b5e97.netlify.app","http://localhost:5173"
+  ],
   credentials: true
 }));
 
 app.use("/api/auth", authRoutes);
+
+app.use("/api", bookingRoutes);
 
 mongoose.connect(process.env.MONGO_URI)
   .then(() => {
