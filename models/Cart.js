@@ -9,7 +9,7 @@ const cartItemsSchema = new mongoose.Schema({
 
 const cardtSchema = new mongoose.Schema({
     userId:{type:mongoose.Schema.Types.ObjectId, ref:"User", unique:true},
-    items:{cartItemsSchema},
+    items:[cartItemsSchema],
     updatedAt:{type:Date,default:Date.now},
 });
 
