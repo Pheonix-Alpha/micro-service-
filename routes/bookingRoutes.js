@@ -1,19 +1,31 @@
-
 import express from "express";
 import Booking from "../models/Booking.js";
 import auth from "../middleware/auth.js";
 
 const router = express.Router();
 
-// Create booking
+// Create booking (order)
 router.post("/booking", auth, async (req, res) => {
   try {
-    const { product, phone } = req.body;
-    const booking = new Booking({ userId: req.user.id, product, phone });
+    const { items, phone, address } = req.body;
+    if (!items || !items.length) return res.status(400).json({ message: "Cart is empty" });
+    if (!phone || !address) return res.status(400).json({ message: "Phone & address required" });
+
+    const total = items.reduce((sum, item) => sum + item.price * item.qty, 0);
+
+    const booking = new Booking({
+      userId: req.user.id,
+      items,
+      phone,
+      address,
+      total,
+    });
+
     await booking.save();
-    res.json({ message: "Booking created", booking });
+    res.json({ message: "Order placed successfully", booking });
   } catch (err) {
-    res.status(500).json({ message: "Error creating booking" });
+    console.error(err);
+    res.status(500).json({ message: "Error placing order" });
   }
 });
 
@@ -23,6 +35,7 @@ router.get("/bookings", auth, async (req, res) => {
     const bookings = await Booking.find({ userId: req.user.id });
     res.json(bookings);
   } catch (err) {
+    console.error(err);
     res.status(500).json({ message: "Error fetching bookings" });
   }
 });

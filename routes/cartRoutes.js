@@ -75,7 +75,8 @@ router.patch("/cart/item/:productId", auth, async (req, res) => {
   }
   cart.updatedAt = new Date();
   await cart.save();
-  res.json(cart);
+  res.json({ items: cart.items });
+
 });
 
 // remove item
@@ -86,7 +87,8 @@ router.delete("/cart/item/:productId", auth, async (req, res) => {
   cart.items = cart.items.filter(i => i.productId.toString() !== req.params.productId);
   cart.updatedAt = new Date();
   await cart.save();
-  res.json(cart);
+  res.json({ items: cart.items });
+
 });
 
 // clear cart
@@ -96,7 +98,8 @@ router.delete("/cart", auth, async (req, res) => {
     { items: [], updatedAt: new Date() },
     { new: true, upsert: true }
   );
-  res.json(cart);
+ res.json({ items: cart.items });
+
 });
 
 export default router;
