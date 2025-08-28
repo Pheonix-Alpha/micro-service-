@@ -8,7 +8,7 @@ export default function authMiddleware(req, res ,next){
     if(!token) return res.status(401).json({msg:"no token available"});
 
     try{
-        const decorded = jwt.verify(token,process.env.JWT_SECREAT);
+        const decorded = jwt.verify(token,process.env.JWT_SECRET);
         req.user = decorded;
         next();
     } catch (err) {

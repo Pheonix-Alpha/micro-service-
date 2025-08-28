@@ -50,8 +50,6 @@ authRouter.post("/login", async (req, res) => {
   }
 });
 
-authRouter.get("/profile", authMiddleware, (req, res) => {
-  res.json({ message: "Welcome to your profile!", user: req.user });
-});
+
 
 export default authRouter;
