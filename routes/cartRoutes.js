@@ -13,28 +13,51 @@ router.get("/cart", auth, async (req, res) => {
 
 // add to cart
 router.post("/cart/add", auth, async (req, res) => {
-  const { productId, qty = 1 } = req.body;
-  const product = await Product.findById(productId);
-  if (!product) return res.status(404).json({ message: "Product not found" });
+  try {
+    const { productId, qty = 1 } = req.body;
+    console.log("👉 Add to cart request body:", req.body);
+    console.log("👉 Auth user:", req.user);
 
-  let cart = await Cart.findOne({ userId: req.user.id });
-  if (!cart) cart = new Cart({ userId: req.user.id, items: [] });
+    if (!productId) {
+      return res.status(400).json({ message: "Product ID is required" });
+    }
 
-  const idx = cart.items.findIndex(i => i.productId.toString() === productId);
-  if (idx > -1) {
-    cart.items[idx].qty += qty;
-  } else {
-    cart.items.push({
-      productId,
-      name: product.name,
-      price: product.price,
-      qty,
-    });
+    const product = await Product.findById(productId);
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    if (!req.user || !req.user.id) {
+      return res.status(401).json({ message: "Invalid user" });
+    }
+
+    let cart = await Cart.findOne({ userId: req.user.id });
+    if (!cart) cart = new Cart({ userId: req.user.id, items: [] });
+
+    const idx = cart.items.findIndex(
+      (i) => i.productId.toString() === productId
+    );
+    if (idx > -1) {
+      cart.items[idx].qty += qty;
+    } else {
+      cart.items.push({
+        productId,
+        name: product.name,
+        price: product.price,
+        qty,
+      });
+    }
+
+    cart.updatedAt = new Date();
+    await cart.save();
+
+    res.json({ items: cart.items });
+  } catch (err) {
+    console.error("❌ Add to cart error:", err);
+    res.status(500).json({ message: "Server error", error: err.message });
   }
-   cart.updatedAt = new Date();
-  await cart.save();
-  res.json(cart);
 });
+
 
 // update quantity
 router.patch("/cart/item/:productId", auth, async (req, res) => {
