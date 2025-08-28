@@ -31,7 +31,7 @@ router.post("/cart/add", auth, async (req, res) => {
       qty,
     });
   }
-  cart.updatedAt = new Date();
+   cart.updatedAt = new Date();
   await cart.save();
   res.json(cart);
 });
