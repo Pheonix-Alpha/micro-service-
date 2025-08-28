@@ -13,7 +13,9 @@ app.use(express.json());
 app.use(cors({
   origin: ["https://magnificent-sherbet-8b5e97.netlify.app","http://localhost:5173"
   ],
-  credentials: true
+  credentials: true,
+   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // allow these methods
+    allowedHeaders: ["Content-Type", "Authorization"], 
 }));
 
 app.use("/api/auth", authRoutes);
