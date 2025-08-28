@@ -5,7 +5,7 @@ const router = express.Router();
 
 
 router.post("/products/seed", async(req,res)=> {
-    const initail = [
+    const initial = [
     { name: "Fertilizer", price: 200 },
     { name: "Seeds Pack", price: 150 },
     { name: "Tractor Oil", price: 500 },
